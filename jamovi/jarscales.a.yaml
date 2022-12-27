@@ -1,0 +1,75 @@
+---
+name:  JARScales
+title: Just-About-Right analysis
+menuGroup: JAR
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name: attr
+      title: List of Attributes
+      type: Variables
+      suggested:
+        - nominal
+        - ordinal
+      permitted:
+        - factor
+
+    - name: attrscale
+      title: Attribute Scale Points
+      type: List
+      options:
+        - title: Three (3)
+          name:  Three
+        - title: Five (5)
+          name:  Five
+        - title: Seven (7)
+          name:  Seven
+        - title: Nine (9)
+          name:  Nine
+      default: Five
+
+    - name: lik
+      title: Overall liking or Purchase intent
+      type: Variable
+      suggested:
+        - continuous
+      permitted: [numeric]
+
+    - name: threshold
+      title: Customer (%) threshold
+      type: Number
+      default: 20
+      min: 1
+      max: 99
+
+    - name: mdropthreshold
+      title: Mean-Drop threshold
+      type: Number
+      default: 1
+      min: 0
+      max: 10
+
+    - name: posthoc
+      title: tukey test
+      type: Bool
+      default: False
+
+    - name: showbarras
+      title: Show attribute barplot
+      type: Bool
+      default: False
+
+    - name: showternary
+      title: Show ternary plot
+      type: Bool
+      default: False
+
+    - name: showdiagnose
+      title: Show diagnostic plot
+      type: Bool
+      default: False
+...

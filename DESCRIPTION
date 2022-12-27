@@ -1,0 +1,12 @@
+Package: JAR
+Type: Package
+Title: Just-About-Right Data Analysis
+Version: 1.0.0
+Author: Ekaitz Esteban
+Maintainer: Ekaitz Esteban <eesteban@bculinary.com>
+Description: >-
+  This module allows you to analyze attributes of a given product. Contains Just-About-Right Scale and penalty analysis for a given product.
+License: GNU GPL v.3
+Encoding: UTF-8
+LazyData: true
+Imports: jmvcore (>= 0.8.5), R6, Ternary

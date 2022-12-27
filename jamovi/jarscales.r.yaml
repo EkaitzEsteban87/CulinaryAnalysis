@@ -1,0 +1,79 @@
+---
+name:  JARScales
+title: Just-About-Right analysis
+jrs:   '1.1'
+
+items:
+    - name:  text
+      title: Just-About-Right analysis
+      type:  Preformatted
+
+    - name:  Consumidores
+      title: Consumer Research (Attributes)
+      type: Table
+      rows: (attr)
+      columns:
+        - name: var
+          title: 'Attributes'
+          type: text
+          combineBelow: true
+        - name: consulow
+          title: 'Low (%)'
+          type: number
+        - name: consujar
+          title: 'Jar (%)'
+          type: number
+        - name: consuhigh
+          title: 'High (%)'
+          type: number
+
+    - name:  MeanDrop
+      title: Mean-drop value (Attributes)
+      type: Table
+      rows: (attr)
+      visible: false
+      columns:
+        - name: var
+          title: 'Attributes'
+          type: text
+          content: ($key)
+          combineBelow: true
+        - name: droplow
+          title: 'Mean-Drop Low'
+          type: number
+        - name: tukeylow
+          title: 'ptukey Low'
+          type: number
+          format: zto,pvalue
+        - name: drophigh
+          title: 'Mean-Drop High'
+          type: number
+        - name: tukeyhigh
+          title: 'ptukey High'
+          type: number
+          format: zto,pvalue
+
+    - name: barraplot
+      title: Barplot of attributes
+      type: Image
+      width:  640
+      height: 640
+      renderFun: .plot3
+      visible: false
+
+    - name: ternaplot
+      title: Ternary Plot of attributes
+      type: Image
+      width:  640
+      height: 640
+      renderFun: .plot
+      visible: false
+
+    - name: diagplot
+      title: Diagnostic Plot of attributes
+      type: Image
+      width:  640
+      height: 640
+      renderFun: .plot2
+      visible: false
+...

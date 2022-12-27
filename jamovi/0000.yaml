@@ -1,0 +1,36 @@
+---
+title: Just-About-Right Data Analysis
+name: JAR
+version: 1.0.0
+jms: '1.0'
+authors:
+  - Ekaitz Esteban
+maintainer: Ekaitz Esteban <eesteban@bculinary.com>
+date: '2022-12-31'
+type: R
+description: >-
+  This module allows you to analyze attributes of a given product ---- v1.0.0
+  Contains Just-About-Right Scale and penalty analysis for a given product.
+analyses:
+  - title: Just-About-Right analysis
+    name: JARScales
+    ns: JAR
+    menuGroup: JAR
+    menuSubgroup: List of Attributes
+    menuTitle: Just-About-Right analysis
+datasets:
+  - name: applejuice
+    path: applejuice.omv
+    description: Attribute data on apple juice
+    tags:
+      - JAR
+  - name: purchaseintent
+    path: purchaseintent.omv
+    description: Purchase intent of a given product
+    tags:
+      - JAR
+usesNative: true
+minApp: 1.0.8
+rVersion: 4.2.2
+
+...

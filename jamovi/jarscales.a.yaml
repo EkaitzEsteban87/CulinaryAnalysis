@@ -62,7 +62,7 @@ options:
     - name: posthoc
       title: Level penalty tukey test
       type: Bool
-      default: False
+      default: True
 
 # Significance level value
     - name: posthocalpha
@@ -76,7 +76,7 @@ options:
     - name: attrhoc
       title: Weighted penalty t-test
       type: Bool
-      default: False
+      default: True
 
 # Significance level value
     - name: attrhocalpha

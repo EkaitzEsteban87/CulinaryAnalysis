@@ -11,9 +11,9 @@ JARScalesOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             lik = NULL,
             threshold = 20,
             mdropthreshold = 1,
-            posthoc = FALSE,
+            posthoc = TRUE,
             posthocalpha = 95,
-            attrhoc = FALSE,
+            attrhoc = TRUE,
             attrhocalpha = 95,
             showbarras = FALSE,
             showternary = FALSE,
@@ -64,7 +64,7 @@ JARScalesOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..posthoc <- jmvcore::OptionBool$new(
                 "posthoc",
                 posthoc,
-                default=FALSE)
+                default=TRUE)
             private$..posthocalpha <- jmvcore::OptionNumber$new(
                 "posthocalpha",
                 posthocalpha,
@@ -74,7 +74,7 @@ JARScalesOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..attrhoc <- jmvcore::OptionBool$new(
                 "attrhoc",
                 attrhoc,
-                default=FALSE)
+                default=TRUE)
             private$..attrhocalpha <- jmvcore::OptionNumber$new(
                 "attrhocalpha",
                 attrhocalpha,
@@ -161,7 +161,7 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="Consumidores",
-                title="Consumer Research (Attributes)",
+                title="Consumer Research",
                 rows="(attr)",
                 clearWith=list(
                     "consulow",
@@ -204,7 +204,7 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="penalizacion",
-                title="Weighted-penalty analysis (Attributes)",
+                title="Weighted-penalty analysis",
                 rows="(attr)",
                 visible="(lik)",
                 clearWith=list(
@@ -248,7 +248,7 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="MeanDropLow",
-                title="Low level penalty analysis (Attributes)",
+                title="Penalty analysis (Level Low)",
                 rows="(attr)",
                 visible="(lik)",
                 clearWith=list(
@@ -292,7 +292,7 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="MeanDropHigh",
-                title="High level penalty analysis (Attributes)",
+                title="Penalty analysis (Level High)",
                 rows="(attr)",
                 visible="(lik)",
                 clearWith=list(
@@ -420,9 +420,9 @@ JARScales <- function(
     lik,
     threshold = 20,
     mdropthreshold = 1,
-    posthoc = FALSE,
+    posthoc = TRUE,
     posthocalpha = 95,
-    attrhoc = FALSE,
+    attrhoc = TRUE,
     attrhocalpha = 95,
     showbarras = FALSE,
     showternary = FALSE,

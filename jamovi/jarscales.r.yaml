@@ -9,7 +9,7 @@ items:
       type:  Preformatted
 
     - name:  Consumidores
-      title: Consumer Research (Attributes)
+      title: Consumer Research
       type: Table
       rows: (attr)
       clearWith:  # <-- here
@@ -45,7 +45,7 @@ items:
           type: number
 
     - name:  penalizacion
-      title: Weighted-penalty analysis (Attributes)
+      title: Weighted-penalty analysis
       type: Table
       rows: (attr)
       visible: "(lik)"
@@ -83,7 +83,7 @@ items:
           visible: "(attrhoc)"
 
     - name:  MeanDropLow
-      title: Low level penalty analysis (Attributes)
+      title: Penalty analysis (Level Low)
       type: Table
       rows: (attr)
       visible: "(lik)"
@@ -121,7 +121,7 @@ items:
           visible: "(posthoc)"
 
     - name:  MeanDropHigh
-      title: High level penalty analysis (Attributes)
+      title: Penalty analysis (Level High)
       type: Table
       rows: (attr)
       visible: "(lik)"

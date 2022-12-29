@@ -37,15 +37,22 @@ children:
                 isTarget: true
       - type: LayoutBox
         margin: large
+        style: inline
         children:
-          - type: TextBox
-            name: threshold
-            format: number
-          - type: TextBox
-            name: mdropthreshold
-            format: number
+          - type: CheckBox
+            name: attrhoc
+            children:
+              - type: TextBox
+                name: attrhocalpha
+                format: number
+                enable: (attrhoc)
           - type: CheckBox
             name: posthoc
+            children:
+              - type: TextBox
+                name: posthocalpha
+                format: number
+                enable: (posthoc)
   - type: CollapseBox
     label: JAR Plots
     collapsed: true
@@ -53,11 +60,24 @@ children:
     children:
       - type: LayoutBox
         margin: large
+        style: inline
+#        verticalAlignment: center
         children:
           - type: CheckBox
             name: showbarras
+            enable: (attr)
           - type: CheckBox
             name: showternary
+            enable: (attr)
           - type: CheckBox
             name: showdiagnose
-
+            enable: (lik)
+            children:
+              - type: TextBox
+                name: threshold
+                format: number
+                enable: (showdiagnose)
+              - type: TextBox
+                name: mdropthreshold
+                format: number
+                enable: (showdiagnose)

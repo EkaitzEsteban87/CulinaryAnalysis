@@ -12,6 +12,9 @@ JARScalesOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             threshold = 20,
             mdropthreshold = 1,
             posthoc = FALSE,
+            posthocalpha = 95,
+            attrhoc = FALSE,
+            attrhocalpha = 95,
             showbarras = FALSE,
             showternary = FALSE,
             showdiagnose = FALSE, ...) {
@@ -62,6 +65,22 @@ JARScalesOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "posthoc",
                 posthoc,
                 default=FALSE)
+            private$..posthocalpha <- jmvcore::OptionNumber$new(
+                "posthocalpha",
+                posthocalpha,
+                default=95,
+                min=1,
+                max=99)
+            private$..attrhoc <- jmvcore::OptionBool$new(
+                "attrhoc",
+                attrhoc,
+                default=FALSE)
+            private$..attrhocalpha <- jmvcore::OptionNumber$new(
+                "attrhocalpha",
+                attrhocalpha,
+                default=95,
+                min=1,
+                max=99)
             private$..showbarras <- jmvcore::OptionBool$new(
                 "showbarras",
                 showbarras,
@@ -81,6 +100,9 @@ JARScalesOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..threshold)
             self$.addOption(private$..mdropthreshold)
             self$.addOption(private$..posthoc)
+            self$.addOption(private$..posthocalpha)
+            self$.addOption(private$..attrhoc)
+            self$.addOption(private$..attrhocalpha)
             self$.addOption(private$..showbarras)
             self$.addOption(private$..showternary)
             self$.addOption(private$..showdiagnose)
@@ -92,6 +114,9 @@ JARScalesOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         threshold = function() private$..threshold$value,
         mdropthreshold = function() private$..mdropthreshold$value,
         posthoc = function() private$..posthoc$value,
+        posthocalpha = function() private$..posthocalpha$value,
+        attrhoc = function() private$..attrhoc$value,
+        attrhocalpha = function() private$..attrhocalpha$value,
         showbarras = function() private$..showbarras$value,
         showternary = function() private$..showternary$value,
         showdiagnose = function() private$..showdiagnose$value),
@@ -102,6 +127,9 @@ JARScalesOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..threshold = NA,
         ..mdropthreshold = NA,
         ..posthoc = NA,
+        ..posthocalpha = NA,
+        ..attrhoc = NA,
+        ..attrhocalpha = NA,
         ..showbarras = NA,
         ..showternary = NA,
         ..showdiagnose = NA)
@@ -113,7 +141,9 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         text = function() private$.items[["text"]],
         Consumidores = function() private$.items[["Consumidores"]],
-        MeanDrop = function() private$.items[["MeanDrop"]],
+        penalizacion = function() private$.items[["penalizacion"]],
+        MeanDropLow = function() private$.items[["MeanDropLow"]],
+        MeanDropHigh = function() private$.items[["MeanDropHigh"]],
         barraplot = function() private$.items[["barraplot"]],
         ternaplot = function() private$.items[["ternaplot"]],
         diagplot = function() private$.items[["diagplot"]]),
@@ -133,12 +163,32 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="Consumidores",
                 title="Consumer Research (Attributes)",
                 rows="(attr)",
+                clearWith=list(
+                    "consulow",
+                    "consujar",
+                    "consuhigh",
+                    "flow",
+                    "fjar",
+                    "fhigh"),
                 columns=list(
                     list(
                         `name`="var", 
                         `title`="Attributes", 
                         `type`="text", 
+                        `content`="($key)", 
                         `combineBelow`=TRUE),
+                    list(
+                        `name`="flow", 
+                        `title`="freq. Low", 
+                        `type`="integer"),
+                    list(
+                        `name`="fjar", 
+                        `title`="freq. Jar", 
+                        `type`="integer"),
+                    list(
+                        `name`="fhigh", 
+                        `title`="freq. High", 
+                        `type`="integer"),
                     list(
                         `name`="consulow", 
                         `title`="Low (%)", 
@@ -153,10 +203,60 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
-                name="MeanDrop",
-                title="Mean-drop value (Attributes)",
+                name="penalizacion",
+                title="Weighted-penalty analysis (Attributes)",
                 rows="(attr)",
-                visible=FALSE,
+                visible="(lik)",
+                clearWith=list(
+                    "penalty",
+                    "penaltyttest",
+                    "penaltyse",
+                    "penaltyp",
+                    "penaltysig"),
+                columns=list(
+                    list(
+                        `name`="var", 
+                        `title`="Attributes", 
+                        `type`="text", 
+                        `content`="($key)", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="penalty", 
+                        `title`="Weighted penalty", 
+                        `type`="number"),
+                    list(
+                        `name`="penaltyttest", 
+                        `title`="t <sub>value</sub>", 
+                        `type`="number", 
+                        `visible`="(attrhoc)"),
+                    list(
+                        `name`="penaltyse", 
+                        `title`="Std. error", 
+                        `type`="number", 
+                        `visible`="(attrhoc)"),
+                    list(
+                        `name`="penaltyp", 
+                        `title`="p <sub>value</sub>", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `visible`="(attrhoc)"),
+                    list(
+                        `name`="penaltysig", 
+                        `title`="Significant", 
+                        `type`="text", 
+                        `visible`="(attrhoc)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="MeanDropLow",
+                title="Low level penalty analysis (Attributes)",
+                rows="(attr)",
+                visible="(lik)",
+                clearWith=list(
+                    "droplow",
+                    "qlow",
+                    "selow",
+                    "tukeylow",
+                    "siglow"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -166,22 +266,73 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `combineBelow`=TRUE),
                     list(
                         `name`="droplow", 
-                        `title`="Mean-Drop Low", 
+                        `title`="Mean-drop low", 
                         `type`="number"),
+                    list(
+                        `name`="qlow", 
+                        `title`="q <sub>value</sub>", 
+                        `type`="number", 
+                        `visible`="(posthoc)"),
+                    list(
+                        `name`="selow", 
+                        `title`="Std. error", 
+                        `type`="number", 
+                        `visible`="(posthoc)"),
                     list(
                         `name`="tukeylow", 
-                        `title`="ptukey Low", 
+                        `title`="p <sub>tukey</sub>", 
                         `type`="number", 
-                        `format`="zto,pvalue"),
+                        `format`="zto,pvalue", 
+                        `visible`="(posthoc)"),
+                    list(
+                        `name`="siglow", 
+                        `title`="Significant", 
+                        `type`="text", 
+                        `visible`="(posthoc)"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="MeanDropHigh",
+                title="High level penalty analysis (Attributes)",
+                rows="(attr)",
+                visible="(lik)",
+                clearWith=list(
+                    "drophigh",
+                    "qhigh",
+                    "sehigh",
+                    "tukeyhigh",
+                    "sighigh"),
+                columns=list(
+                    list(
+                        `name`="var", 
+                        `title`="Attributes", 
+                        `type`="text", 
+                        `content`="($key)", 
+                        `combineBelow`=TRUE),
                     list(
                         `name`="drophigh", 
-                        `title`="Mean-Drop High", 
+                        `title`="Mean-drop high", 
                         `type`="number"),
                     list(
-                        `name`="tukeyhigh", 
-                        `title`="ptukey High", 
+                        `name`="qhigh", 
+                        `title`="q <sub>value</sub>", 
                         `type`="number", 
-                        `format`="zto,pvalue"))))
+                        `visible`="(posthoc)"),
+                    list(
+                        `name`="sehigh", 
+                        `title`="Std. error", 
+                        `type`="number", 
+                        `visible`="(posthoc)"),
+                    list(
+                        `name`="tukeyhigh", 
+                        `title`="p <sub>tukey</sub>", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `visible`="(posthoc)"),
+                    list(
+                        `name`="sighigh", 
+                        `title`="Significant", 
+                        `type`="text", 
+                        `visible`="(posthoc)"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="barraplot",
@@ -189,7 +340,7 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=640,
                 height=640,
                 renderFun=".plot3",
-                visible=FALSE))
+                visible="(showbarras)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="ternaplot",
@@ -197,7 +348,7 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=640,
                 height=640,
                 renderFun=".plot",
-                visible=FALSE))
+                visible="(showternary)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="diagplot",
@@ -205,7 +356,7 @@ JARScalesResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=640,
                 height=640,
                 renderFun=".plot2",
-                visible=FALSE))}))
+                visible="(showdiagnose)"))}))
 
 JARScalesBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "JARScalesBase",
@@ -237,6 +388,9 @@ JARScalesBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param threshold .
 #' @param mdropthreshold .
 #' @param posthoc .
+#' @param posthocalpha .
+#' @param attrhoc .
+#' @param attrhocalpha .
 #' @param showbarras .
 #' @param showternary .
 #' @param showdiagnose .
@@ -244,7 +398,9 @@ JARScalesBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' \tabular{llllll}{
 #'   \code{results$text} \tab \tab \tab \tab \tab a preformatted \cr
 #'   \code{results$Consumidores} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$MeanDrop} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$penalizacion} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$MeanDropLow} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$MeanDropHigh} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$barraplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$ternaplot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$diagplot} \tab \tab \tab \tab \tab an image \cr
@@ -265,6 +421,9 @@ JARScales <- function(
     threshold = 20,
     mdropthreshold = 1,
     posthoc = FALSE,
+    posthocalpha = 95,
+    attrhoc = FALSE,
+    attrhocalpha = 95,
     showbarras = FALSE,
     showternary = FALSE,
     showdiagnose = FALSE) {
@@ -289,6 +448,9 @@ JARScales <- function(
         threshold = threshold,
         mdropthreshold = mdropthreshold,
         posthoc = posthoc,
+        posthocalpha = posthocalpha,
+        attrhoc = attrhoc,
+        attrhocalpha = attrhocalpha,
         showbarras = showbarras,
         showternary = showternary,
         showdiagnose = showdiagnose)

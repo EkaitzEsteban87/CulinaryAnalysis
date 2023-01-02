@@ -9,8 +9,7 @@ maintainer: Ekaitz Esteban <eesteban@bculinary.com>
 date: '2022-12-31'
 type: R
 description: >-
-  This module allows you to analyze attributes of a given product ---- v1.0.0
-  Contains Just-About-Right Scale and penalty analysis for a given product.
+  Just-About-Right Scale and penalty analysis for a given product.
 analyses:
   - title: Just-About-Right analysis
     name: JARScales
